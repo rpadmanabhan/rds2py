@@ -55,13 +55,18 @@ class build_ext(build_ext_orig):
                 cmd += ["--config", "Release"]
             self.spawn(cmd)
             if os.name == "nt":
-                # Gave up trying to get MSVC to respect the output directory.
-                # Delvewheel also needs it to have a 'pyd' suffix... whatever.
-                shutil.copyfile(
-                    os.path.join(build_temp, "Release", "_core.dll"),
-                    os.path.join(outpath, "_core.pyd"),
-                )
-
+                # Search for the actual .pyd file generated (e.g. lib_rds_parser.cp312-win_amd64.pyd)
+                release_dir = os.path.join(build_temp, "Release")
+                for filename in os.listdir(release_dir):
+                    if filename.endswith(".pyd"):
+                        src = os.path.join(release_dir, filename)
+                        dst = os.path.join(outpath, filename)
+                        os.makedirs(outpath, exist_ok=True)
+                        print(f"Copying built extension from {src} to {dst}")
+                        shutil.copyfile(src, dst)
+                        break
+                else:
+                    raise FileNotFoundError("No .pyd file found in build output.")
 
 if __name__ == "__main__":
     try:
