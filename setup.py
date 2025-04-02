@@ -58,7 +58,7 @@ class build_ext(build_ext_orig):
                 # Search for the actual .pyd file generated (e.g. lib_rds_parser.cp312-win_amd64.pyd)
                 release_dir = os.path.join(build_temp, "Release")
                 for filename in os.listdir(release_dir):
-                    if filename.endswith(".pyd"):
+                    if filename.endswith(".pyd") or filename.endswith(".dll"):
                         src = os.path.join(release_dir, filename)
                         dst = os.path.join(outpath, filename)
                         os.makedirs(outpath, exist_ok=True)
