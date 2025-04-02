@@ -57,15 +57,18 @@ class build_ext(build_ext_orig):
             if os.name == "nt":
                 # Search for the actual .pyd file generated (e.g. lib_rds_parser.cp312-win_amd64.pyd)
                 release_dir = os.path.join(build_temp, "Release")
+                os.makedirs(outpath, exist_ok=True)
+                found_pyd = False
                 for filename in os.listdir(release_dir):
-                    if filename.endswith(".pyd") or filename.endswith(".dll"):
+                    if filename.endswith((".pyd", ".dll")):
                         src = os.path.join(release_dir, filename)
                         dst = os.path.join(outpath, filename)
-                        os.makedirs(outpath, exist_ok=True)
                         print(f"Copying built extension from {src} to {dst}")
                         shutil.copyfile(src, dst)
-                        break
-                else:
+                        if filename.endswith(".pyd"):
+                            found_pyd = True
+
+                if not found_pyd:
                     raise FileNotFoundError("No .pyd file found in build output.")
 
 if __name__ == "__main__":
