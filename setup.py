@@ -60,7 +60,7 @@ class build_ext(build_ext_orig):
                 os.makedirs(outpath, exist_ok=True)
                 found_pyd = False
                 for filename in os.listdir(release_dir):
-                    if filename.endswith((".pyd", ".dll")):
+                    if filename.endswith(".pyd"):
                         src = os.path.join(release_dir, filename)
                         dst = os.path.join(outpath, filename)
                         print(f"Copying built extension from {src} to {dst}", flush = True)
