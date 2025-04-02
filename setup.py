@@ -59,7 +59,7 @@ class build_ext(build_ext_orig):
                 release_dir = os.path.join(build_temp, "Release")
                 found_pyd = False
                 for filename in os.listdir(release_dir):
-                    if filename.endswith((".pyd", ".dll")):
+                    if filename.endswith(".pyd") or filename.endswith(".dll"):
                         src = os.path.join(release_dir, filename)
                         dst = os.path.join(outpath, filename)
                         os.makedirs(outpath, exist_ok=True)
